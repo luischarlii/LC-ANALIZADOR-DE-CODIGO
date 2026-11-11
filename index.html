@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width,
+        initial-scale=1,
+        viewport-fit=cover">
+
+  <meta name="theme-color" content="#101827">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <meta name="apple-mobile-web-app-title"
+        content="LC HTML Security Scanner">
+
+  <link rel="manifest" href="./manifest.json">
+
+  <title>LC HTML Security Scanner</title>
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <header class="topbar">
+
+    <div class="brand">
+      <div class="logo">LC</div>
+
+      <div>
+        <h1>HTML Security Scanner</h1>
+        <span>Analizador de código HTML</span>
+      </div>
+    </div>
+
+  </header>
+
+
+  <main class="container">
+
+    <section class="hero">
+
+      <h2>🔐 Analiza tu HTML</h2>
+
+      <p>
+        Detecta patrones potencialmente peligrosos
+        antes de ejecutar un archivo HTML.
+      </p>
+
+    </section>
+
+
+    <section class="input-card">
+
+      <div class="section-title">
+        <span>📄 Código HTML</span>
+      </div>
+
+      <textarea
+        id="htmlInput"
+        spellcheck="false"
+        autocapitalize="off"
+        autocomplete="off"
+        placeholder="Pega aquí tu código HTML..."></textarea>
+
+      <div class="actions">
+
+        <button id="analyzeBtn" class="primary">
+          🔍 Analizar HTML
+        </button>
+
+        <button id="clearBtn" class="secondary">
+          🗑️ Limpiar
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section id="resultSection"
+             class="result-card hidden">
+
+      <div class="result-header">
+
+        <div>
+          <h2 id="riskTitle">
+            Resultado
+          </h2>
+
+          <p id="riskDescription">
+            Esperando análisis...
+          </p>
+        </div>
+
+        <div id="riskBadge"
+             class="risk-badge">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="score-container">
+
+        <div class="score-label">
+          <span>Nivel de riesgo</span>
+          <strong id="riskScore">0/100</strong>
+        </div>
+
+        <div class="progress">
+          <div id="scoreBar"
+               class="progress-bar">
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="summary">
+
+        <div class="summary-item">
+          <strong id="criticalCount">0</strong>
+          <span>Críticos</span>
+        </div>
+
+        <div class="summary-item">
+          <strong id="highCount">0</strong>
+          <span>Altos</span>
+        </div>
+
+        <div class="summary-item">
+          <strong id="mediumCount">0</strong>
+          <span>Medios</span>
+        </div>
+
+        <div class="summary-item">
+          <strong id="lowCount">0</strong>
+          <span>Bajos</span>
+        </div>
+
+      </div>
+
+
+      <div class="findings">
+
+        <div class="section-title">
+          <span>⚠️ Hallazgos</span>
+        </div>
+
+        <div id="findingsList">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="info-card">
+
+      <h3>🛡️ ¿Qué analiza?</h3>
+
+      <ul>
+        <li>JavaScript potencialmente peligroso</li>
+        <li>Funciones dinámicas como eval()</li>
+        <li>URLs y conexiones externas</li>
+        <li>iframes y redirecciones</li>
+        <li>Código JavaScript ofuscado</li>
+        <li>Event handlers sospechosos</li>
+        <li>Acceso a cookies y almacenamiento</li>
+        <li>Formularios que envían datos</li>
+      </ul>
+
+    </section>
+
+
+    <section class="warning-card">
+
+      <strong>⚠️ Importante</strong>
+
+      <p>
+        Este scanner realiza análisis estático del código.
+        Un resultado seguro no garantiza que un HTML sea
+        completamente inocuo.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <footer>
+
+    <p>
+      LC HTML Security Scanner
+      · Análisis local
+      · Sin subir tu código
+    </p>
+
+  </footer>
+
+
+  <script src="./app.js"></script>
+
+</body>
+</html>
