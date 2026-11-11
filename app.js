@@ -368,18 +368,69 @@ function analyzeHTML(html) {
    NIVEL DE RIESGO
 ========================= */
 
-function getRisk(score) {
+function getRisk(score, findings = []) {
+
+  if (findings.some(f => f.level === "critical")) {
+    return {
+      title: "Riesgo crítico",
+      description: "Se detectó código con capacidad de ejecución dinámica o comportamiento potencialmente peligroso.",
+      label: "CRÍTICO",
+      className: "level-critical"
+    };
+  }
+
+  if (findings.some(f => f.level === "high")) {
+    return {
+      title: "Riesgo alto",
+      description: "Se encontraron indicadores que requieren revisión.",
+      label: "ALTO",
+      className: "level-high"
+    };
+  }
 
   if (score === 0) {
     return {
-      title: "Sin amenazas detectadas",
-      description:
-        "No se encontraron patrones relevantes en el análisis.",
-      label: "SEGURO",
+      title: "Sin patrones detectados",
+      description: "No se encontraron coincidencias con las reglas actuales. Esto no garantiza que el HTML sea seguro.",
+      label: "SIN HALLAZGOS",
       className: "level-low"
     };
   }
 
+  if (score <= 20) {
+    return {
+      title: "Riesgo bajo",
+      description: "Se encontraron elementos que conviene revisar.",
+      label: "BAJO",
+      className: "level-low"
+    };
+  }
+
+  if (score <= 45) {
+    return {
+      title: "Riesgo medio",
+      description: "Hay patrones que requieren revisión.",
+      label: "MEDIO",
+      className: "level-medium"
+    };
+  }
+
+  if (score <= 70) {
+    return {
+      title: "Riesgo alto",
+      description: "Se encontraron varios indicadores sospechosos.",
+      label: "ALTO",
+      className: "level-high"
+    };
+  }
+
+  return {
+    title: "Riesgo crítico",
+    description: "Se encontraron múltiples indicadores peligrosos.",
+    label: "CRÍTICO",
+    className: "level-critical"
+  };
+}
   if (score <= 20) {
     return {
       title: "Riesgo bajo",
@@ -426,7 +477,7 @@ function getRisk(score) {
 
 function showResults(result) {
 
-  const risk = getRisk(result.score);
+const risk = getRisk(result.score, result.findings);  
 
   resultSection.classList.remove("hidden");
 
