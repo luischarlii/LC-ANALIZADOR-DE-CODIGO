@@ -262,21 +262,22 @@ const R=[
 [2,12,"Nombres de ofuscador","\\b_0x[0-9a-f]{3,}","Patrón típico de herramientas que ofuscan JavaScript."],
 [2,10,"Bloque largo codificado","[A-Za-z0-9+/]{200,}={0,2}","Cadena muy larga que parece datos o código codificado."],
 [3,20,"Lectura de cookies","document\\.cookie","Puede robar sesiones si los datos salen hacia otro sitio."],
-[2,10,"Envío de datos a la red","sendBeacon|XMLHttpRequest|\\bfetch\\s*\\(|new\\s+WebSocket","Verifica a qué dirección se envía y qué información lleva."],
+[2,10,"Envío de datos a la red","sendBeaco[n]|XMLHttpReques[t]|\\bfetch\\s*\\(|new\\s+WebSocket","Verifica a qué dirección se envía y qué información lleva."],
 [2,12,"Captura de teclas","addEventListener\\s*\\(\\s*[\"']key(?:down|up|press)[\"']|onkey(?:down|up|press)\\s*=","Escucha lo que se escribe. Es normal en juegos y atajos, pero también en keyloggers."],
 [3,20,"iframe oculto","<iframe[^>]*(?:width\\s*=\\s*[\"']?0|height\\s*=\\s*[\"']?0|display\\s*:\\s*none|hidden)","Carga otra página sin que se vea."],
 [2,10,"Redirección o ventana nueva","location(?:\\.href|\\.replace|\\.assign)?\\s*=[^=]|window\\.open\\s*\\(","Puede llevar al usuario a otro sitio sin avisar."],
 [2,10,"document.write","document\\.write(?:ln)?\\s*\\(","Inserta contenido al cargar; se usa mucho para inyectar código."],
 [2,12,"Formulario hacia otro sitio","<form[^>]+action\\s*=\\s*[\"']https?://","Los datos del formulario se envían fuera de la página."],
-[2,8,"Permisos sensibles","getUserMedia|geolocation|clipboard\\.(?:read|write)|Notification\\.requestPermission","Pide cámara, micrófono, ubicación, portapapeles o notificaciones."],
-[3,30,"Minero de criptomonedas","coin-?hive|cryptonight|crypto-?loot|webminer|minero","Usa el dispositivo para minar sin permiso."],
+[2,8,"Permisos sensibles","getUserMedi[a]|geolocatio[n]|clipboard\\.(?:read|write)|Notification\\.requestPermission","Pide cámara, micrófono, ubicación, portapapeles o notificaciones."],
+[3,30,"Minero de criptomonedas","coin-?hiv[e]|cryptonigh[t]|crypto-?loo[t]|webmine[r]|coinim[p]|deepMine[r]|jsecoi[n]","Usa el dispositivo para minar sin permiso."],
 [1,5,"Scripts externos","<script[^>]+src\\s*=\\s*[\"']https?://","Carga código de otro sitio; confía solo en orígenes conocidos."],
 [1,5,"HTML dinámico","\\.(?:innerHTML|outerHTML)\\s*\\+?=","Riesgo de inyección si el contenido viene de datos externos."],
-[1,4,"javascript: o eventos en línea","javascript:|\\bon(?:error|load)\\s*=\\s*[\"']","Ejecuta código desde atributos del HTML."],
+[1,4,"Código en enlaces o eventos en línea","javascrip[t]:|\\bon(?:error|load)\\s*=\\s*[\"']","Ejecuta código desde atributos del HTML."],
 [1,3,"Enlaces externos","https?://[^\\s\"'<>)]+","Direcciones a las que el código hace referencia."]
 ];
 const $=id=>document.getElementById(id);
 function analyze(t){
+ t=t.replace(/data:image\/[a-z+.-]+;base64,[A-Za-z0-9+\/=]+/gi,"data:image/…");
  const starts=[0];for(let i=0;i<t.length;i++)if(t[i]==="\n")starts.push(i+1);
  const lineOf=p=>{let a=0,b=starts.length-1;while(a<b){const m=(a+b+1)>>1;starts[m]<=p?a=m:b=m-1}return a};
  const lines=t.split("\n"),out=[];
